@@ -1,8 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Photon.Pun;
 
-public class bullet : MonoBehaviour
+public class bullet : MonoBehaviourPun
 {
     public GameObject owner;
     private float speed = 20f;
@@ -27,6 +28,9 @@ public class bullet : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (!photonView.IsMine)
+            return;
+
         // Avoid self-collision or collisions with certain objects
         if (other.gameObject == this.gameObject) return;
         if (owner != null && (other.gameObject == owner || other.transform.IsChildOf(owner.transform)))

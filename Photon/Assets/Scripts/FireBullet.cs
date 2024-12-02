@@ -18,7 +18,7 @@ public class FireBullet : MonoBehaviour
     }
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.H) && photonView.IsMine)
+        if (Input.GetButtonDown("Fire1") && photonView.IsMine)
             Spawn();
     }
 
@@ -27,10 +27,10 @@ public class FireBullet : MonoBehaviour
         spawnPosition = transform.position;
         spawnRotation = transform.rotation;
         spawnPosition.y += 1.2f;
-        spawnPosition += transform.forward / 3;
+        spawnPosition += transform.forward / 2;
         if (prefab != null)
         {
-            GameObject instance = Instantiate(prefab, spawnPosition, spawnRotation);
+            GameObject instance = PhotonNetwork.Instantiate("bullet", spawnPosition, spawnRotation);
             bullet bulletScript = instance.GetComponent<bullet>();
             bulletScript.owner = this.gameObject;
         }
