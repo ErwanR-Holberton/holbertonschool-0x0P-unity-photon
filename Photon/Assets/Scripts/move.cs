@@ -9,9 +9,13 @@ public class move : MonoBehaviour
     public float rotationSpeed = 100.0f;
     private Rigidbody rb;
     PhotonView photonView;
+    private Animator animator;
+    private bool isGrounded;
+    private float jumpForce = 5.0f;
 
     void Start()
     {
+        animator = GetComponentInChildren<Animator>();
         rb = GetComponent<Rigidbody>();
         photonView = GetComponent<PhotonView>();
         if (photonView.IsMine)
@@ -34,6 +38,7 @@ public class move : MonoBehaviour
             cameraRight.Normalize();
 
             Vector3 move = (cameraForward * moveZ + cameraRight * moveX) * speed;
+            animator.SetFloat("Speed", move.magnitude);
 
             Vector3 newPosition = rb.position + move * Time.deltaTime;
             rb.MovePosition(newPosition);
@@ -43,6 +48,20 @@ public class move : MonoBehaviour
                 Quaternion targetRotation = Quaternion.LookRotation(move);
                 rb.rotation = Quaternion.Lerp(rb.rotation, targetRotation, Time.deltaTime * rotationSpeed);  // rotationSpeed controls the rotation speed
             }
+            if (Input.GetButtonDown("Jump") && isGrounded)
+            {
+                rb.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+                animator.SetBool("Jump", true);
+            }
         }
+    }
+
+    private void FixedUpdate()
+    {
+        Vector3 rayOrigin = transform.position + Vector3.up * 0f; // Raise the origin slightly
+        isGrounded = Physics.Raycast(rayOrigin, Vector3.down, 0.1f);
+        if (isGrounded && animator.GetBool("Jump"))
+            animator.SetBool("Jump", false);
+        animator.SetFloat("JumpHeight", rb.velocity.y);
     }
 }

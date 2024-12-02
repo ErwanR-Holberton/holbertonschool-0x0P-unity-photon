@@ -16,7 +16,7 @@ public class CheckName : MonoBehaviour
         else
         {
             PlayerPrefs.SetString("Username", NameInputField.text);
-            SceneManager.LoadScene("Game");
+            SceneManager.LoadScene("Scene_A");
         }
     }
 

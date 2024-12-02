@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class bullet : MonoBehaviour
 {
+    public GameObject owner;
     private float speed = 20f;
     private float lifetime = 5f;
     private int damage = 10;
@@ -28,6 +29,11 @@ public class bullet : MonoBehaviour
     {
         // Avoid self-collision or collisions with certain objects
         if (other.gameObject == this.gameObject) return;
+        if (owner != null && (other.gameObject == owner || other.transform.IsChildOf(owner.transform)))
+        {
+            Debug.Log("Owner");
+            return;
+        }
 
         UpdateHealth health = other.GetComponent<UpdateHealth>();
         if (health != null)

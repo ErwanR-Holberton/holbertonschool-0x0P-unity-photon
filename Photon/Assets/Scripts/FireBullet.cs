@@ -31,6 +31,8 @@ public class FireBullet : MonoBehaviour
         if (prefab != null)
         {
             GameObject instance = Instantiate(prefab, spawnPosition, spawnRotation);
+            bullet bulletScript = instance.GetComponent<bullet>();
+            bulletScript.owner = this.gameObject;
         }
         else
         {
